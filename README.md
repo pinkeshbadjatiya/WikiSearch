@@ -72,7 +72,7 @@ We generate the following files in this step:
 The built search supports the following type of queries:
  - **Multi-word queries**
 	- Eg. `Barach Obama`: We can perform such queries by searching for posting lists of individual words and then taking union of the results. Since we have 5 fields, we search for each word in all the fields and then merge the results.
-	- `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of (weighted summation of scores of a word in all fields) for each word in query*. This provides us a absolute score for each document. Regarding the weights, these weights denote the importance of each field for a word, thus altering its score based on application. For example, a word occuring in title once would have much more importance than a word occuring 10 time in external links.
+	- `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of (weighted summation of scores of a word in all fields) for each word in query**. This provides us a absolute score for each document. Regarding the weights, these weights denote the importance of each field for a word, thus altering its score based on application. For example, a word occuring in title once would have much more importance than a word occuring 10 time in external links.
 
  - **Field queries**
 	- Eg. `b:Barach b:Obama i:president`: We can perform such queries by searching for posting lists of individual words in those particular field index only. We perform the union of these results.
@@ -82,10 +82,13 @@ The built search supports the following type of queries:
 	- Eg. `Barack Obama i:president c:politics`: To perform such queries we combine both the above methods to obtain a common scores for each of the documents. For words with specific fields attached, we obtain scores as per the *Field queries* method, while for words which do not have explicit field requests, we obtain weighted scores using the method *Multi-word queries*.
 
 These methods allow us to perform most of the complex queries, some exampls are as follows:
-- Barack Obama c:politics
-- c:president
-- President of USA i:president
-- Life Of Pi c:movies
+
+| Query Syntax        			|					Summary							|
+| :-----------------------------------:	|:----------------------------------------------------------------------------------------------|
+| `Barack Obama c:politics`		| Fetches pages that have `Barack Obama` in content along with `politics` in categories section.|
+| `c:president`				| Find all pages that have category as president.						|
+| `President of USA i:president`	| Find pages containing `President of USA` along with have the term `president` in the InfoBox.	|
+| `Life Of Pi c:movies`			| Find the pages containing the movie name `life of pi`.					|
 
 
 ### 5. Search Complexity? : Analyzing the runtime
