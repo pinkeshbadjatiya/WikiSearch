@@ -24,9 +24,9 @@ SAX Parser is used to parse the XML Corpus without loading the entire corpus in 
 The index, consisting of stemmed words and posting list is build for the corpus after performing the above operations. Similar operations are performed for all the other fields. We assign new docIds to each instance of the Wikipedia page which helps in reducing the size as the document_id while storing, thereby reducing the index size. Since the size of the corpus will not fit into the main memory thus several index files are generated. We generate the following files:
 
 * `vocabularyList.txt` : This file contains the merged vocabulary obtained from Wikipedia dump. Its sorted by word and each lineis of the following format:  
-	`barack 21 25706` - Here 1st token denotes the name of the word, 2nd token denotes the file number that stores more information about the word, while the 3rd token denotes the document_frequency or count of the number of documents that have at least one occurance of the word.  
+	- `barack 21 25706` - Here 1st token denotes the name of the word, 2nd token denotes the file number that stores more information about the word, while the 3rd token denotes the document_frequency or count of the number of documents that have at least one occurance of the word.  
 * `title.txt`: It stores the title of the Wikipedia document. Each line in the file is of the following format:  
-	`76 International Atomic Time` - Here, the 1st token denotes the `doc_id` of the Wikipedia page in the whole corpus. It will be later used by the seach tool to map the `doc_id` to `doc_name`.
+	- `76 International Atomic Time` - Here, the 1st token denotes the `doc_id` of the Wikipedia page in the whole corpus. It will be later used by the seach tool to map the `doc_id` to `doc_name`.
 
 * `titleoffset.txt`: This file denotes the offsets that would be used to obtain the title of a particular `doc_id` using Binary search on the offsets. Offsets essentially provides the seek values to be used while reading the file to directly read a particular line. Each of the line in the offset denotes the seek value that must be used to read that line directly in the `title.txt` file.
 
