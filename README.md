@@ -1,12 +1,12 @@
 # WikiSearch
 A simple search engine built in python capable of building optimised positional index for the Wikipedia dump &amp; perform field queries
-This repository consists of the mini project done as part of the course Information Retrieval and Extraction - Monsoon 2016. The course was instructed by [Dr. Vasudeva Varma](http://faculty.iiit.ac.in/~vv/Home.html). 
+This repository consists of the mini project done as part of the course Information Retrieval and Extraction - Monsoon 2017. The course was instructed by [Dr. Vasudeva Varma](http://faculty.iiit.ac.in/~vv/Home.html). 
 
 ## Instructions
 - Install Python 2.6 or above
 - Install the pip dependencies using `pip install -r requirements.txt`
 - Setup appropriate values in `config.py` mentioning the kind of values to store in the indexer. These values can have major impact on the performance of the indexing as well as the searching part.
-- Increase the I/O limit in Ubuntu if you are indexing on a large corpus as K-way merge sort requires opening a large number of files.
+- Increase the limit of `open files limit` in Ubuntu if you are indexing on a large corpus as K-way merge sort requires opening a large number of files and by default the max number of files that you can open at a time is 1024. **Instructions:** [https://easyengine.io/tutorials/linux/increase-open-files-limit/](https://easyengine.io/tutorials/linux/increase-open-files-limit/)
 
 ## Problem Statement
 The mini project involves building a search engine on the Wikipedia Data Dump without using any external index. For this project we use the data dump ofof size ~64 GB. The search results return in real time. Multi word and multi field search on Wikipedia Corpus is implemented.
@@ -84,7 +84,7 @@ The built search supports the following type of queries:
 These methods allow us to perform most of the complex queries, some exampls are as follows:
 
 | Query Syntax        			|					Summary							|
-| :-----------------------------------:	|:----------------------------------------------------------------------------------------------|
+| :------------------------------------	|:----------------------------------------------------------------------------------------------|
 | `Barack Obama c:politics`		| Fetches pages that have `Barack Obama` in content along with `politics` in categories section.|
 | `c:president`				| Find all pages that have category as president.						|
 | `President of USA i:president`	| Find pages containing `President of USA` along with have the term `president` in the InfoBox.	|
