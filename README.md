@@ -68,31 +68,46 @@ We generate the following files in this step:
 * **Note**: We merge the partial index files `index1.txt` ... to obtain global index files `b0.txt`, `i13.txt` etc. Once a full partial index is used, we delete it from HDD to free space. Hence, after the merge process, we obtain the files `numberofFiles.txt`, `titles.txt`, `titleoffset.txt` and `vocabularyListtxt` along with the global index files.
 
 
-## 4. Search: Analyzing the Complexity
+### 4. Search: Performing multi-word / multi-field queries
+The built search supports the following type of queries:
+ - **Multi-word queries**
+	- Eg. `Barach Obama`: We can perform such queries by searching for posting lists of individual words and then taking union of the results. Since we have 5 fields, we search for each word in all the fields and then merge the results.
+	- `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of (weighted summation of scores of a word in all fields) for each word in query*. This provides us a absolute score for each document. Regarding the weights, these weights denote the importance of each field for a word, thus altering its score based on application. For example, a word occuring in title once would have much more importance than a word occuring 10 time in external links.
+
+ - **Field queries**
+	- Eg. `b:Barach b:Obama i:president`: We can perform such queries by searching for posting lists of individual words in those particular field index only. We perform the union of these results.
+	- `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of scores of individual words**. This provides us a absolute score for each document and thus allows us to rank.
+
+- **Multi-word field queries**
+	- Eg. `Barack Obama i:president c:politics`: To perform such queries we combine both the above methods to obtain a common scores for each of the documents. For words with specific fields attached, we obtain scores as per the *Field queries* method, while for words which do not have explicit field requests, we obtain weighted scores using the method *Multi-word queries*.
+
+These methods allow us to perform most of the complex queries, some exampls are as follows:
+- Barack Obama c:politics
+- c:president
+- President of USA i:president
+- Life Of Pi c:movies
+
+
+### 5. Search Complexity? : Analyzing the runtime
 - `Search Time`: The above optimizations by using sorted indexes & the offset trick allows us to perform the search in less than linear time using Binary Search over all the index files. To be accurate, the search time reduces to **O(logm * logn)** where m is the number of words in the vocabulary file and n is the number of words in the largest field file.
-- With sorted indexes, we can furthur reduce the search time for multi-keyboard queries by truncation the posting lists so that merging is efficient for even words with huge number of occurences, eg, for words like __play__.
+- With sorted indexes, we can furthur reduce the search time for multi-keyboard queries by truncation the posting lists so that merging is efficient for even words with huge number of occurences, eg, for words like *play*.
 
 
 ### Source Code walkthrough!
-
 The src folder contains the following files:
 
-* wikiIndexer.py
-This function takes as input the corpus and creates the entire index in field separated manner. Along with the field files, it also creates the offsets for the same. It also creates a map for the title and the document id along with its offset. Apart from this it also creates the vocabulary List
+* `config.py`:  This file contains the various configuration that is used by the indexer as well as the searcher. The index is built as per the configuration mentioned here.
 
-In order to run this code run the following:
-**python wikiIndexer.py ./sampleText ./outputFolderPath**
+* `wikiIndexer.py`: This function takes as input the corpus and creates the entire index in field separated manner. Along with the field files, it also creates the offsets for the same. It also creates a map for the title and the document id along with its offset. Apart from this it also creates the vocabulary List.  
 
-* search.py
-This function takes as input the query and returns the top ten results from the Wikipedia corpus.
+To execute, run the following command: **python wikiIndexer.py <wiki-XML-dump-path> <output-index-folder-path>**
 
-In order to run this code run the following:
-**python search.py ./outputFolderPath**
+* `search.py` - This function takes as input the query and returns the top ten results from the Wikipedia corpus.
 
-###Helper Functions:
+To execute, run the following command: **python search.py <output-index-folder-path>**
 
-* textProcessing.py 
-This helper function does all the preprocessing. It acts as helper for search.py, wikiIndexer.py
 
-* fileHandler.py
-This function does all the file preprocessing. It acts as helper for wikiIndexer.py
+### Helper Functions:
+
+* `textProcessing.py`: This helper function does all the preprocessing. It acts as helper for search.py, wikiIndexer.py
+* `fileHandler.py`: This function does all the file preprocessing. It acts as helper for wikiIndexer.py
