@@ -11,7 +11,7 @@ The mini project involves building a search engine on the Wikipedia Data Dump wi
 
 ## Search Engine Specifications
 
-### Parsing
+### 1. Parsing: Read through the raw dump & extract essential words/phrases for indexing & searching
 SAX Parser is used to parse the XML Corpus without loading the entire corpus in memory. This helps parse the corpus with minimum memory. After parsing the following morphological operations are performed to obtain clean vocalulary.
 
 * `Stemming`: Using an externalFor stemming, a python library PyStemmer is used.
@@ -21,9 +21,11 @@ SAX Parser is used to parse the XML Corpus without loading the entire corpus in 
 * `Stemming`: This converts all the words into its root words. Python library PyStemmer is used.
 * `Lemmetization (optional)`: This removes all the morphological transformations from the word and provides its raw form. NLTK lemmetizer is used for this purpose.
 
+
+### 2. Partial Indexes: Extracting & storing essential information in small partial indexes
 The index, consisting of stemmed words and posting list is build for the corpus after performing the above operations. Similar operations are performed for all the other fields. We assign new docIds to each instance of the Wikipedia page which helps in reducing the size as the document_id while storing, thereby reducing the index size. Since the size of the corpus will not fit into the main memory thus several index files are generated. We generate the following files:
 
-* `vocabularyList.txt` : This file contains the merged vocabulary obtained from Wikipedia dump. Its sorted by word and each lineis of the following format:  
+* `vocabularyList.txt` : This file contains the merged vocabulary obtained from Wikipedia dump. It is sorted by word and each line is of the following format:  
 	- `barack 21 25706` - Here 1st token denotes the name of the word, 2nd token denotes the file number that stores more information about the word, while the 3rd token denotes the document_frequency or count of the number of documents that have at least one occurance of the word.  
 * `title.txt`: It stores the title of the Wikipedia document. Each line in the file is of the following format:  
 	- `76 International Atomic Time` - Here, the 1st token denotes the `doc_id` of the Wikipedia page in the whole corpus. It will be later used by the seach tool to map the `doc_id` to `doc_name`.
@@ -32,7 +34,7 @@ The index, consisting of stemmed words and posting list is build for the corpus 
 
 
 
-### The Global Index: Merging the partial indexes to obtain a sorted big index.
+### 3. The Global Index: Merging the partial indexes to obtain a sorted big index.
 Next, these index files are merged using **K-Way Merge** along with creating field based index files.
 For example, index0.txt, index1.txt, index2.txt are generated. These files may contain the same word. Hence, K Way Merge is applied and field based files are generated along with their respective offsets. These field based files are generated using multi-threading. This helps in doing multiple I/O simultaneously. Along with this the vocabulary file is also generated.
 
