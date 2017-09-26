@@ -3,16 +3,18 @@ A simple search engine built in python capable of building optimised positional 
 This repository consists of the mini project done as part of the course Information Retrieval and Extraction - Monsoon 2017. The course was instructed by [Dr. Vasudeva Varma](http://faculty.iiit.ac.in/~vv/Home.html). 
 
 ## Instructions
-- Install Python 2.6 or above
+- Install Python 2.7. Does not support Python 3
+	- Migration to Python 3 should be as easy as changing print statements.
 - Install the pip dependencies using `pip install -r requirements.txt`
-- Setup appropriate values in `config.py` mentioning the kind of values to store in the indexer. These values can have major impact on the performance of the indexing as well as the searching part.
-- Increase the limit of `open files limit` in Ubuntu if you are indexing on a large corpus as K-way merge sort requires opening a large number of files and by default the max number of files that you can open at a time is 1024. **Instructions:** [https://easyengine.io/tutorials/linux/increase-open-files-limit/](https://easyengine.io/tutorials/linux/increase-open-files-limit/)
+- Setup appropriate values in `config.py` mentioning the kind of values to store in the indexer. These values can have major impact on the performance of indexing as well as the searching part.
+- Increase the value of `open files limit` in Ubuntu if you are indexing on a large corpus as K-way merge sort requires opening a large number of files and by default the max number of files that you can open at a time is 1024. **Instructions:** [https://easyengine.io/tutorials/linux/increase-open-files-limit/](https://easyengine.io/tutorials/linux/increase-open-files-limit/)
 
 ## Problem Statement
-The mini project involves building a search engine on the Wikipedia Data Dump without using any external index. For this project we use the data dump ofof size ~64 GB. The search results return in real time. Multi word and multi field search on Wikipedia Corpus is implemented.
+- The mini project involves building a search engine on the Wikipedia Data Dump without using any external index. For this project we use the data dump ofof size ~64 GB. The search results return in real time. Multi word and multi field search on Wikipedia Corpus is implemented.
+- You also need to rank the documents and display only the top 10 most relevant documents.
+- Search should take <5 seconds and the index should be ~20% of the dump size.
 
 ## Search Engine Specifications
-
 ### 1. Parsing: Read through the raw dump & extract essential words/phrases for indexing & searching
 SAX Parser is used to parse the XML Corpus without loading the entire corpus in memory. This helps parse the corpus with minimum memory. After parsing the following morphological operations are performed to obtain clean vocalulary.
 
@@ -96,7 +98,7 @@ These methods allow us to perform most of the complex queries, some exampls are 
 - With sorted indexes, we can furthur reduce the search time for multi-keyboard queries by truncation the posting lists so that merging is efficient for even words with huge number of occurences, eg, for words like *play*.
 
 
-### Source Code walkthrough!
+## Source Code walkthrough!
 The src folder contains the following files:
 
 * `config.py`:  This file contains the various configuration that is used by the indexer as well as the searcher. The index is built as per the configuration mentioned here.
@@ -110,7 +112,7 @@ To execute, run the following command: **python wikiIndexer.py <wiki-XML-dump-pa
 To execute, run the following command: **python search.py <output-index-folder-path>**
 
 
-### Helper Functions:
+## Helper Functions:
 
 * `textProcessing.py`: This helper function does all the preprocessing. It acts as helper for search.py, wikiIndexer.py
 * `fileHandler.py`: This function does all the file preprocessing. It acts as helper for wikiIndexer.py
