@@ -104,11 +104,11 @@ The src folder contains the following files:
 
 * `wikiIndexer.py`: This function takes as input the corpus and creates the entire index in field separated manner. Along with the field files, it also creates the offsets for the same. It also creates a map for the title and the document id along with its offset. Apart from this it also creates the Vocabulary List.  
  
- To execute, run the following command: **python wikiIndexer.py <wiki-XML-dump-path> <output-index-folder-path>**
+   To execute, run the following command: **python wikiIndexer.py <wiki-XML-dump-path> <output-index-folder-path>**
 
 * `search.py` - This function takes as input the query and returns the top ten results from the Wikipedia corpus.
 
- To execute, run the following command: **python search.py <output-index-folder-path>**
+   To execute, run the following command: **python search.py <output-index-folder-path>**
 
 
 ## Helper Functions:
