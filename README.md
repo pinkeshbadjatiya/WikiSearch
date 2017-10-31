@@ -3,8 +3,7 @@ A simple search engine built in python capable of building optimised positional 
 This repository consists of the mini project done as part of the course Information Retrieval and Extraction - Monsoon 2017. The course was instructed by [Dr. Vasudeva Varma](http://faculty.iiit.ac.in/~vv/Home.html). 
 
 ## Instructions
-- Install Python 2.7. Does not support Python 3
- - Migration to Python 3 should be as easy as changing print statements.
+- Install Python 2.7
 - Install the pip dependencies using `pip install -r requirements.txt`
 - Setup appropriate values in `config.py` mentioning the kind of values to store in the indexer. These values can have a major impact on the performance of indexing as well as the searching part.
 - Increase the value of `open files limit` in Ubuntu if you are indexing on a large corpus as K-way merge sort requires opening a large number of files and by default, the max number of files that you can open at a time is 1024. **Instructions:** [https://easyengine.io/tutorials/linux/increase-open-files-limit/](https://easyengine.io/tutorials/linux/increase-open-files-limit/)
