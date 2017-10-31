@@ -31,15 +31,15 @@ SAX Parser is used to parse the XML Corpus without loading the entire corpus in 
 The index, consisting of stemmed words and posting list is built for the corpus after performing the above operations. Similar operations are performed for all the other fields. We assign new docIds to each instance of the Wikipedia page which helps in reducing the size as the document_id while storing, thereby reducing the index size. Since the size of the corpus will not fit into the main memory thus several index files are generated. We generate the following files:
 
 * `title.txt`: It stores the title of the Wikipedia document. Each line in the file is of the following format:  
- - `76 International Atomic Time` - Here, the 1st token denotes the `doc_id` of the Wikipedia page in the whole corpus. It will be later used by the search tool to map the `doc_id` to `doc_name`.
+  - `76 International Atomic Time` - Here, the 1st token denotes the `doc_id` of the Wikipedia page in the whole corpus. It will be later used by the search tool to map the `doc_id` to `doc_name`.
 
 * `titleoffset.txt`: This file denotes the offsets that would be used to obtain the title of a particular `doc_id` using Binary search on the offsets. Offsets essentially provide the seek values to be used while reading the file to directly read a particular line. Each of the line in the offset denotes the seek value that must be used to read that line directly in the `title.txt` file.
 
 * `numberOfFiles.txt`: This denotes the total number of documents that are parsed and indexed. This should be equal to the total number of lines in the file `titles.txt`.
 
 * `index0.txt`, `index1.txt`, ... `index9.txt`: These files are partial indexes of size as denoted in the config file. Each of these lines contains information about the occurrence of a word in the corpus. The syntax of each line is as follows:
- - `bilstein 139 0 4 0 0 0  642 0 10 0 0 0  4388 0 1 0 0 0` - Here each occurrence of the word in a document is denoted by a tuple of 6 tokens (eg, `139 0 4 0 0 0`). Each of these tuples gives information about its occurrence in a Wikipedia document.
- - `139 0 4 0 0 0`: Each occurrence of the term in a document has the following syntax. It corresponds to `Doc_Id TitleScore BodyScore InfoBoxScore CategoryScore ExternalLinksScore`. Default it stores the frequency of the terms in the following field. The indexer can be configured using the `config.py` to store the scores instead of frequency to improve both the ranking performance as well as improve the search time.
+  - `bilstein 139 0 4 0 0 0  642 0 10 0 0 0  4388 0 1 0 0 0` - Here each occurrence of the word in a document is denoted by a tuple of 6 tokens (eg, `139 0 4 0 0 0`). Each of these tuples gives information about its occurrence in a Wikipedia document.
+  - `139 0 4 0 0 0`: Each occurrence of the term in a document has the following syntax. It corresponds to `Doc_Id TitleScore BodyScore InfoBoxScore CategoryScore ExternalLinksScore`. Default it stores the frequency of the terms in the following field. The indexer can be configured using the `config.py` to store the scores instead of frequency to improve both the ranking performance as well as improve the search time.
 
 Once we have generated the partial indexes, we can perform merging to obtain a global index that can allow us to search for a term efficiently.  
 
@@ -53,16 +53,16 @@ Hence, K Way Merge is applied and field-based files are generated along with the
 We generate the following files in this step:
 
 * `b1.txt`, `t45.txt`, `i3.txt`, `c82.txt`, `e0.txt`: These files denote the fields indexes corresponding to the fields **Body**, **Title**, **Info Box**, **Category** and **External Links** respectively, of the file numbers 1, 45, 3, 82, 0 respectively.  Each of the lines in these files is of the format:
- - `aadhar 1324575 12 619212 3 7185170 1` - Here the 1st token corresponds to the name of the word. The next token will correspond to the `doc_id` of the document in which this word occurred followed by the score of the document. Default score is **freq**. This can be modified to store other score_types by changing the `config.py` file.
- - The order of `doc_id`s in each line is sorted by the doc score (default score is freq, so sorted by frequency) corresponding to that word.
- - This property is useful as it allows us to obtain `Top N` documents for each term allowing us to perform various time-based heuristics or word importance based heuristics to improve performance.
+  - `aadhar 1324575 12 619212 3 7185170 1` - Here the 1st token corresponds to the name of the word. The next token will correspond to the `doc_id` of the document in which this word occurred followed by the score of the document. Default score is **freq**. This can be modified to store other score_types by changing the `config.py` file.
+  - The order of `doc_id`s in each line is sorted by the doc score (default score is freq, so sorted by frequency) corresponding to that word.
+  - This property is useful as it allows us to obtain `Top N` documents for each term allowing us to perform various time-based heuristics or word importance based heuristics to improve performance.
 
 * `ob1.txt`, `ot45.txt`, `oi3.txt`, `oc82.txt`, `oe0.txt`: These files correspond to the offsets of each of these files. These offsets allow us to search for a word in the index file with **log(n)** complexity. The syntax of each of lines is as follows:
- - `6344225 26` - 1st token denotes the offset that will be used to seek the file pointer to read that line directly, while the 2nd token denotes the `doc_freq` of that term or the total number of unique documents where this term occurs.
- - This information can be used while performing intersection/union/difference of posting lists which can improve the performance.
+  - `6344225 26` - 1st token denotes the offset that will be used to seek the file pointer to read that line directly, while the 2nd token denotes the `doc_freq` of that term or the total number of unique documents where this term occurs.
+  - This information can be used while performing intersection/union/difference of posting lists which can improve the performance.
 
 * `vocabularyList.txt`: This file contains the merged vocabulary obtained from Wikipedia dump. It is sorted by word and each line is of the following format:  
- - `barack 21 25706` - Here 1st token denotes the name of the word, 2nd token denotes the file number that stores more information about the word, essentially the global index, while the 3rd token denotes the document frequency or count of the number of documents that have at least one occurrence of the word.  
+  - `barack 21 25706` - Here 1st token denotes the name of the word, 2nd token denotes the file number that stores more information about the word, essentially the global index, while the 3rd token denotes the document frequency or count of the number of documents that have at least one occurrence of the word.  
 
 * `offset.txt`: Since the Wikipedia dump is pretty huge, we cannot even store the entire vocabulary in the main memory, so we create offset of this file as well so that we can perform a lookup of a word in the covabularyList in **log(VocabSize)** which is quite fast.
 
@@ -73,15 +73,15 @@ We generate the following files in this step:
 ### 4. Search: Performing multi-word / multi-field queries
 The built search supports the following type of queries:
  - **Multi-word queries**
- - Eg. `Barach Obama`: We can perform such queries by searching for posting lists of individual words and then taking the union of the results. Since we have 5 fields, we search for each word in all the fields and then merge the results.
- - `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of (weighted summation of scores of a word in all fields) for each word in query**. This provides us an absolute score for each document. Regarding the weights, these weights denote the importance of each field for a word, thus altering its score based on application. For example, a word occurring in the title once would have much more importance than a word occurring 10 times in external links.
+   - Eg. `Barach Obama`: We can perform such queries by searching for posting lists of individual words and then taking the union of the results. Since we have 5 fields, we search for each word in all the fields and then merge the results.
+   - `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of (weighted summation of scores of a word in all fields) for each word in query**. This provides us an absolute score for each document. Regarding the weights, these weights denote the importance of each field for a word, thus altering its score based on application. For example, a word occurring in the title once would have much more importance than a word occurring 10 times in external links.
 
  - **Field queries**
- - Eg. `b:Barach b:Obama i:president`: We can perform such queries by searching for posting lists of individual words in those particular field index only. We perform the union of these results.
- - `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of scores of individual words**. This provides us an absolute score for each document and thus allows us to rank.
+   - Eg. `b:Barach b:Obama i:president`: We can perform such queries by searching for posting lists of individual words in those particular field index only. We perform the union of these results.
+   - `Rank?` - To rank these results, we compute the scores for each document for a multi-word query as **score = summation of scores of individual words**. This provides us an absolute score for each document and thus allows us to rank.
 
 - **Multi-word field queries**
- - Eg. `Barack Obama i:president c:politics`: To perform such queries we combine both the above methods to obtain common scores for each of the documents. For words with specific fields attached, we obtain scores as per the *Field queries* method, while for words which do not have explicit field requests, we obtain weighted scores using the method *Multi-word queries*.
+   - Eg. `Barack Obama i:president c:politics`: To perform such queries we combine both the above methods to obtain common scores for each of the documents. For words with specific fields attached, we obtain scores as per the *Field queries* method, while for words which do not have explicit field requests, we obtain weighted scores using the method *Multi-word queries*.
 
 These methods allow us to perform most of the complex queries, some examples are as follows:
 
