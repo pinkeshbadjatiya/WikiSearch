@@ -107,17 +107,17 @@ def main():
     OUTPUT_FOLDER = sys.argv[2]
 
     # SAX Parser
-    #parser = xml.sax.make_parser()
-    #handler = WikiHandler()
-    #parser.setContentHandler(handler)
-    #parser.parse(sys.argv[1])
-    #with open(OUTPUT_FOLDER + '/numberOfFiles.txt','wb') as f:
-    #  f.write(str(count))
+    parser = xml.sax.make_parser()
+    handler = WikiHandler()
+    parser.setContentHandler(handler)
+    parser.parse(sys.argv[1])
+    with open(OUTPUT_FOLDER + '/numberOfFiles.txt','wb') as f:
+      f.write(str(count))
 
-    #offset = writeIntoFile(OUTPUT_FOLDER, index, dict_Id, countFile, offset)
+    offset = writeIntoFile(OUTPUT_FOLDER, index, dict_Id, countFile, offset)
     # pdb.set_trace()
-    #countFile+=1
-    countFile = 3529
+    countFile+=1
+    #countFile = 3529
     mergeFiles(OUTPUT_FOLDER, countFile)
 
     titleOffset=[]
